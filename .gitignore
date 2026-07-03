@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# Raw large input files
+*.h5
+*.h5ad
+*.loom
+
+single_cell_platelet_signature/Inputs/BoneMarrow/Raw/*
+!single_cell_platelet_signature/Inputs/BoneMarrow/Raw/.gitkeep
+
+single_cell_platelet_signature/Inputs/Blood/Raw/*
+!single_cell_platelet_signature/Inputs/Blood/Raw/.gitkeep
+
+# Generated results
+single_cell_platelet_signature/Results_BoneMarrow/*
+!single_cell_platelet_signature/Results_BoneMarrow/.gitkeep
+
+single_cell_platelet_signature/Results_Blood/*
+!single_cell_platelet_signature/Results_Blood/.gitkeep
+
+single_cell_platelet_signature/Results_MergeSignature/*
+!single_cell_platelet_signature/Results_MergeSignature/.gitkeep
+
+single_cell_platelet_signature/Results_Reactome/*
+!single_cell_platelet_signature/Results_Reactome/.gitkeep
+
+# R generated objects and logs
+*.rds
+*.RData
+*.Rhistory
+*.log
+*sessionInfo*.txt
+
+# Temporary files
+*.tmp
+*.bak
