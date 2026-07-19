@@ -36,56 +36,20 @@
     "n_excluded_broadly_expressed_genes": 8,
     "n_signature_genes": 41
   },
-  "expected_signature_genes_checked": [
-    "NRGN",
-    "NCOA4"
-  ],
   "created_at": "2026-07-02 17:01:25.284969",
   "single_cell_reference_score_method": {
     "method": "Seurat::AddModuleScore",
     "scope": "Used only for diagnostic scoring of the single-cell bone marrow and peripheral blood reference objects."
   },
-  "bulk_tumor_score_definitions": {
-    "TCGA_PRAD": {
-      "expression_scale": "log2(TPM + 1)",
-      "available_signature_genes": 41,
-      "aggregation": "Arithmetic mean across the available signature genes for each tumor",
-      "standardization": "Z-standardized across tumors within the TCGA-PRAD cohort"
-    },
-    "Friedrich_GSE134051": {
-      "expression_scale": "Normalized log-expression values",
-      "available_signature_genes": 38,
-      "missing_signature_genes": [
-        "FTL",
-        "CCL5",
-        "NCOA4"
-      ],
-      "aggregation": "Arithmetic mean across the available signature genes for each tumor",
-      "standardization": "Z-standardized across tumors within the Friedrich cohort"
-    }
-  },
+  "bulk_tumor_score_method_scope": "This derivation module does not define one universal bulk-tumor scoring method. Downstream cohort pipelines must document expression scale, aggregation across available signature genes, missing-gene handling, and within-cohort standardization.",
   "gene_identifier": "Human gene symbols as represented in the source expression matrices",
-  "signature_order_definition": "Descending support_score, with gene symbol used to break ties",
+  "signature_order_definition": "Descending support_score, with gene symbol used to break ties; the resulting order must match the canonical 41-gene vector exactly.",
   "support_score_formula": "(pct_bm + pct_blood) + 10 * (mean_bm + mean_blood)",
-  "public_resource": {
-    "file": "resources/platelet_associated_transcriptional_signature.tsv",
-    "format": "TSV",
-    "n_signature_genes": 41,
-    "columns": [
-      "signature_order",
-      "gene_symbol",
-      "bone_marrow_detection_pct",
-      "blood_detection_pct"
-    ],
-    "detection_percentage_precision": "Full precision retained from pct_bm and pct_blood",
-    "source_canonical_csv_sha256": "e7e4fb0aa5321028995d65a9eb84884e8168c8f0302c701bc3481ba2a87dcbed",
-    "public_tsv_sha256": "fe1fe32808e601d5f5d2a25d18ae5b1ddd0f82c7ecdffbb28915d06b3f94c7a7"
-  },
   "derivation_module": "single_cell_platelet_signature",
   "derivation_script": "single_cell_platelet_signature/Scripts/03_define_platelet_associated_signature.R",
   "generated_derivation_outputs": {
     "tracked_in_repository": false,
-    "note": "These files are generated at runtime by the single-cell signature module and are intentionally excluded from version control.",
+    "note": "These internal Results_* files are generated at runtime by the single-cell signature module and are intentionally not tracked in the repository.",
     "paths": {
       "signature_txt": "single_cell_platelet_signature/Results_MergeSignature/Signature/platelet_associated_signature.txt",
       "signature_csv": "single_cell_platelet_signature/Results_MergeSignature/Signature/platelet_associated_signature.csv",
@@ -97,5 +61,20 @@
       "derivation_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/platelet_associated_signature_derivation_table.csv",
       "supplementary_signature_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/Supplementary_Table_X_platelet_associated_transcriptional_signature.csv"
     }
+  },
+  "canonical_signature_validation": {
+    "n_genes": 41,
+    "exact_order_required": true,
+    "ordered_gene_symbols": ["TMSB4X", "PPBP", "FTH1", "PF4", "GNG11", "FTL", "SH3BGRL3", "NRGN", "CAVIN2", "CCL5", "TAGLN2", "NCOA4", "SERF2", "MAP3K7CL", "MYL6", "CLU", "TUBB1", "ITM2B", "PTMA", "MYL12A", "RGS18", "CALM3", "SPARC", "PGRMC1", "NAP1L1", "RGS10", "ARPC1B", "ACRBP", "PPDPF", "ACTG1", "TUBA4A", "TREML1", "MMD", "GP9", "FKBP1A", "LAMTOR1", "CTSA", "HMGB1", "TIMP1", "GPX4", "FERMT3"],
+    "excluded_genes_absent": ["B2M", "GAPDH", "ACTB", "PKM", "EIF1", "OAZ1", "SAT1", "OST4"]
+  },
+  "public_resource": {
+    "file": "resources/platelet_associated_transcriptional_signature.tsv",
+    "format": "TSV",
+    "n_signature_genes": 41,
+    "columns": ["signature_order", "gene_symbol", "bone_marrow_detection_pct", "blood_detection_pct"],
+    "detection_percentage_precision": "Full precision retained from pct_bm and pct_blood",
+    "source_canonical_csv_sha256": "e7e4fb0aa5321028995d65a9eb84884e8168c8f0302c701bc3481ba2a87dcbed",
+    "public_tsv_sha256": "fe1fe32808e601d5f5d2a25d18ae5b1ddd0f82c7ecdffbb28915d06b3f94c7a7"
   }
 }

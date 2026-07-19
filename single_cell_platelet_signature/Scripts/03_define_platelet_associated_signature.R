@@ -140,7 +140,49 @@ broadly_expressed_exclusion_genes <- c(
 )
 
 expected_signature_n <- 41
-expected_signature_genes <- c("NRGN", "NCOA4")
+canonical_signature_genes <- c(
+  "TMSB4X",
+  "PPBP",
+  "FTH1",
+  "PF4",
+  "GNG11",
+  "FTL",
+  "SH3BGRL3",
+  "NRGN",
+  "CAVIN2",
+  "CCL5",
+  "TAGLN2",
+  "NCOA4",
+  "SERF2",
+  "MAP3K7CL",
+  "MYL6",
+  "CLU",
+  "TUBB1",
+  "ITM2B",
+  "PTMA",
+  "MYL12A",
+  "RGS18",
+  "CALM3",
+  "SPARC",
+  "PGRMC1",
+  "NAP1L1",
+  "RGS10",
+  "ARPC1B",
+  "ACRBP",
+  "PPDPF",
+  "ACTG1",
+  "TUBA4A",
+  "TREML1",
+  "MMD",
+  "GP9",
+  "FKBP1A",
+  "LAMTOR1",
+  "CTSA",
+  "HMGB1",
+  "TIMP1",
+  "GPX4",
+  "FERMT3"
+)
 
 ###############################################################################
 # 6. Safe write helpers
@@ -483,26 +525,93 @@ safe_write_csv(
 # 14. Signature validation
 ###############################################################################
 
-if (nrow(platelet_associated_signature) != expected_signature_n) {
+observed_signature_n <- nrow(platelet_associated_signature)
+
+if (observed_signature_n != expected_signature_n) {
   stop(
     "Platelet-associated signature must contain ",
     expected_signature_n,
     " genes; observed ",
-    nrow(platelet_associated_signature),
+    observed_signature_n,
     ".",
     call. = FALSE
   )
 }
 
-missing_expected_genes <- setdiff(
-  expected_signature_genes,
-  platelet_associated_signature$gene
+observed_signature_genes <- trimws(as.character(platelet_associated_signature$gene))
+
+if (
+  length(observed_signature_genes) != expected_signature_n ||
+    anyNA(observed_signature_genes) ||
+    any(!nzchar(observed_signature_genes))
+) {
+  stop(
+    "Platelet-associated signature validation failed: all 41 gene symbols must be non-empty and non-missing.",
+    call. = FALSE
+  )
+}
+
+duplicated_signature_genes <- unique(
+  observed_signature_genes[duplicated(observed_signature_genes)]
 )
 
-if (length(missing_expected_genes) > 0) {
+if (length(duplicated_signature_genes) > 0) {
   stop(
-    "Platelet-associated signature is missing expected gene(s): ",
-    paste(missing_expected_genes, collapse = ", "),
+    "Platelet-associated signature validation failed: duplicated gene symbol(s): ",
+    paste(duplicated_signature_genes, collapse = ", "),
+    call. = FALSE
+  )
+}
+
+observed_signature_order <- suppressWarnings(
+  as.integer(platelet_associated_signature$signature_order)
+)
+
+if (
+  length(observed_signature_order) != expected_signature_n ||
+    anyNA(observed_signature_order) ||
+    !identical(observed_signature_order, seq_len(expected_signature_n)) ||
+    any(as.numeric(platelet_associated_signature$signature_order) != observed_signature_order)
+) {
+  stop(
+    "Platelet-associated signature validation failed: signature_order must be exactly 1 through 41.",
+    call. = FALSE
+  )
+}
+
+if (!identical(observed_signature_genes, canonical_signature_genes)) {
+  mismatch_index <- which(observed_signature_genes != canonical_signature_genes)[1]
+  missing_canonical <- setdiff(canonical_signature_genes, observed_signature_genes)
+  unexpected_observed <- setdiff(observed_signature_genes, canonical_signature_genes)
+
+  stop(
+    "Platelet-associated signature validation failed: membership or order differs from the canonical 41-gene vector.",
+    " First mismatch at signature_order ", mismatch_index,
+    ": expected '", canonical_signature_genes[mismatch_index],
+    "', observed '", observed_signature_genes[mismatch_index], "'.",
+    if (length(missing_canonical) > 0) {
+      paste0(" Missing canonical gene(s): ", paste(missing_canonical, collapse = ", "), ".")
+    } else {
+      ""
+    },
+    if (length(unexpected_observed) > 0) {
+      paste0(" Unexpected gene(s): ", paste(unexpected_observed, collapse = ", "), ".")
+    } else {
+      ""
+    },
+    call. = FALSE
+  )
+}
+
+excluded_genes_in_signature <- intersect(
+  broadly_expressed_exclusion_genes,
+  observed_signature_genes
+)
+
+if (length(excluded_genes_in_signature) > 0) {
+  stop(
+    "Platelet-associated signature validation failed: excluded broadly expressed gene(s) remain in the final signature: ",
+    paste(excluded_genes_in_signature, collapse = ", "),
     call. = FALSE
   )
 }
@@ -561,7 +670,29 @@ metadata <- list(
     "Shared bone marrow and blood platelet-associated gene universes",
     "followed by exact exclusion of broadly expressed genes"
   ),
-  intended_score_method = "Seurat::AddModuleScore",
+  single_cell_reference_score_method = list(
+    method = "Seurat::AddModuleScore",
+    scope = paste(
+      "Used only for diagnostic scoring of the single-cell bone marrow",
+      "and peripheral blood reference objects."
+    )
+  ),
+  bulk_tumor_score_method_scope = paste(
+    "This derivation module does not define one universal bulk-tumor scoring method.",
+    "Downstream cohort pipelines must document expression scale, aggregation across",
+    "available signature genes, missing-gene handling, and within-cohort standardization."
+  ),
+  gene_identifier = "Human gene symbols as represented in the source expression matrices",
+  signature_order_definition = paste(
+    "Descending support_score, with gene symbol used to break ties;",
+    "the resulting order must match the canonical 41-gene vector exactly."
+  ),
+  support_score_formula = "(pct_bm + pct_blood) + 10 * (mean_bm + mean_blood)",
+  derivation_module = "single_cell_platelet_signature",
+  derivation_script = file.path(
+    "Scripts",
+    "03_define_platelet_associated_signature.R"
+  ),
   inputs = list(
     bm_table = file.path(
       "Results_BoneMarrow",
@@ -640,7 +771,12 @@ metadata <- list(
     n_excluded_broadly_expressed_genes = nrow(excluded_broadly_expressed_genes),
     n_signature_genes = nrow(platelet_associated_signature)
   ),
-  expected_signature_genes_checked = expected_signature_genes,
+  canonical_signature_validation = list(
+    n_genes = expected_signature_n,
+    exact_order_required = TRUE,
+    ordered_gene_symbols = canonical_signature_genes,
+    excluded_genes_absent = broadly_expressed_exclusion_genes
+  ),
   created_at = as.character(Sys.time())
 )
 
