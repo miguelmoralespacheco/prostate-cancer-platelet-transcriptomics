@@ -14,5 +14,7 @@
 
 This module will use the repository-level canonical signature at
 `../../resources/platelet_associated_transcriptional_signature.tsv`.
-Data acquisition and portable scripts are pending later controlled migration
-phases.
+Portable cohort scripts are included. Raw and serialized inputs are not
+distributed, and the analytical workflow has not yet been executed from this
+public repository. Friedrich acquisition and input-preparation documentation
+remain pending.

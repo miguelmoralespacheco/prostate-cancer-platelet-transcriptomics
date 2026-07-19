@@ -16,5 +16,10 @@ All modules must read the canonical signature from
 to each cohort module, or from the equivalent repository-root-resolved path.
 Independent module-local signature copies must not be maintained.
 
-Portable scripts and selected results will be added in later controlled
-migration phases.
+Portable cohort-specific analytical scripts are included for TCGA-PRAD and
+Friedrich (GSE134051). Raw and serialized inputs are not distributed, and the
+analytical workflows have not yet been executed from this public repository.
+
+TCGA acquisition documentation and Friedrich acquisition/preparation
+documentation remain pending. Cross-cohort scripts also remain pending until
+standardized text-readable input contracts are defined.
