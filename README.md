@@ -8,7 +8,7 @@ This repository contains reproducible scripts for platelet-associated transcript
 
 ## Data policy
 
-Large raw data files are not distributed in this repository. Raw 10x Genomics H5 matrices must be downloaded from the original source and placed in the expected `Inputs/*/Raw/` folders before running the scripts.
+Large raw data files are not distributed in this repository. The exact H5 inventory and checksums are documented in [`single_cell_platelet_signature/Inputs/DATA_SOURCES.tsv`](single_cell_platelet_signature/Inputs/DATA_SOURCES.tsv); obtain the matrices from the [Human Cell Atlas project](https://explore.data.humancellatlas.org/projects/cc95ff89-2e68-4a08-a234-480eca21ce79) and place them in the expected `Inputs/*/Raw/` folders before running the scripts.
 
 ## Current status
 
