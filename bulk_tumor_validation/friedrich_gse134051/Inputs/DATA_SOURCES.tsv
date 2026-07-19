@@ -1,0 +1,3 @@
+cohort_id	source_resource	accession_or_identifier	platform_or_collection	resource_role	evidence_status	local_handling	notes
+friedrich_gse134051	Friedrich cohort	GSE134051	GPL26898 / gex.logq	Normalized log-expression matrix	PARTIALLY_RESOLVED	GENERATED_LOCALLY_NOT_TRACKED	Retained provenance identifies curatedPCaData::getPCa("friedrich") and gex.logq; the historical package/resource version was not recovered; no additional transformation was documented before local serialization.
+friedrich_gse134051	Friedrich cohort	GSE134051	GPL26898 / colData	Sample identity, sample type and clinical metadata	PARTIALLY_RESOLVED	GENERATED_LOCALLY_NOT_TRACKED	Clinical metadata were retained from colData; the historical package/resource version was not recovered.
