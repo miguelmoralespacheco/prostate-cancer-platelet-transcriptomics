@@ -5,6 +5,7 @@ This repository contains reproducible scripts for platelet-associated transcript
 ## Modules
 
 - `single_cell_platelet_signature/`: derivation of a platelet-associated transcriptional signature from Human Cell Atlas single-cell bone marrow and blood references.
+- `bulk_tumor_validation/`: validation of the platelet-associated transcriptional score in TCGA-PRAD and Friedrich (GSE134051), including cross-cohort analyses.
 
 ## Data policy
 

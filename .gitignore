@@ -35,3 +35,26 @@ single_cell_platelet_signature/Results_Reactome/*
 # Temporary files
 *.tmp
 *.bak
+
+# Bulk-tumor validation modules
+.DS_Store
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+bulk_tumor_validation/**/Inputs/LocalLarge/
+bulk_tumor_validation/**/*.rds
+bulk_tumor_validation/**/*.RDS
+bulk_tumor_validation/**/*.RData
+bulk_tumor_validation/**/*.rda
+bulk_tumor_validation/**/*.xlsx
+
+bulk_tumor_validation/**/Results/generated/
+bulk_tumor_validation/**/Figures/generated/
+bulk_tumor_validation/**/Results/**/Objects/
+
+bulk_tumor_validation/**/*.tmp
+bulk_tumor_validation/**/*.bak
+bulk_tumor_validation/**/*~
+# End bulk-tumor validation modules
