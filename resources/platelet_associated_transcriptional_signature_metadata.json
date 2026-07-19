@@ -1,0 +1,101 @@
+{
+  "signature_name": "platelet_associated_transcriptional_signature",
+  "score_name": "platelet_associated_transcriptional_score",
+  "signature_label": "Platelet-associated transcriptional signature",
+  "score_label": "Platelet-associated transcriptional score",
+  "signature_derivation_method": "Shared bone marrow and blood platelet-associated gene universes followed by exact exclusion of broadly expressed genes",
+  "inputs": {
+    "bm_table": "single_cell_platelet_signature/Results_BoneMarrow/Tables/BM_platelet_associated_lowRNA_cluster_gene_universe_curated.csv",
+    "blood_table": "single_cell_platelet_signature/Results_Blood/Tables/Blood_platelet_associated_lowRNA_cluster_gene_universe_curated.csv"
+  },
+  "parameters": {
+    "pct_min": 10,
+    "mean_min": 0.1,
+    "delta_pct_filter_used": false,
+    "sig_delta_pct_max": null
+  },
+  "exclusion": {
+    "exclusion_type": "exact_match",
+    "exclusion_reason": "broadly_expressed_genes",
+    "excluded_genes": [
+      "B2M",
+      "GAPDH",
+      "ACTB",
+      "PKM",
+      "EIF1",
+      "OAZ1",
+      "SAT1",
+      "OST4"
+    ]
+  },
+  "counts": {
+    "n_bm_curated_genes": 53,
+    "n_blood_curated_genes": 85,
+    "n_shared_genes": 49,
+    "n_shared_genes_before_exclusion": 49,
+    "n_excluded_broadly_expressed_genes": 8,
+    "n_signature_genes": 41
+  },
+  "expected_signature_genes_checked": [
+    "NRGN",
+    "NCOA4"
+  ],
+  "created_at": "2026-07-02 17:01:25.284969",
+  "single_cell_reference_score_method": {
+    "method": "Seurat::AddModuleScore",
+    "scope": "Used only for diagnostic scoring of the single-cell bone marrow and peripheral blood reference objects."
+  },
+  "bulk_tumor_score_definitions": {
+    "TCGA_PRAD": {
+      "expression_scale": "log2(TPM + 1)",
+      "available_signature_genes": 41,
+      "aggregation": "Arithmetic mean across the available signature genes for each tumor",
+      "standardization": "Z-standardized across tumors within the TCGA-PRAD cohort"
+    },
+    "Friedrich_GSE134051": {
+      "expression_scale": "Normalized log-expression values",
+      "available_signature_genes": 38,
+      "missing_signature_genes": [
+        "FTL",
+        "CCL5",
+        "NCOA4"
+      ],
+      "aggregation": "Arithmetic mean across the available signature genes for each tumor",
+      "standardization": "Z-standardized across tumors within the Friedrich cohort"
+    }
+  },
+  "gene_identifier": "Human gene symbols as represented in the source expression matrices",
+  "signature_order_definition": "Descending support_score, with gene symbol used to break ties",
+  "support_score_formula": "(pct_bm + pct_blood) + 10 * (mean_bm + mean_blood)",
+  "public_resource": {
+    "file": "resources/platelet_associated_transcriptional_signature.tsv",
+    "format": "TSV",
+    "n_signature_genes": 41,
+    "columns": [
+      "signature_order",
+      "gene_symbol",
+      "bone_marrow_detection_pct",
+      "blood_detection_pct"
+    ],
+    "detection_percentage_precision": "Full precision retained from pct_bm and pct_blood",
+    "source_canonical_csv_sha256": "e7e4fb0aa5321028995d65a9eb84884e8168c8f0302c701bc3481ba2a87dcbed",
+    "public_tsv_sha256": "fe1fe32808e601d5f5d2a25d18ae5b1ddd0f82c7ecdffbb28915d06b3f94c7a7"
+  },
+  "derivation_module": "single_cell_platelet_signature",
+  "derivation_script": "single_cell_platelet_signature/Scripts/03_define_platelet_associated_signature.R",
+  "generated_derivation_outputs": {
+    "tracked_in_repository": false,
+    "note": "These files are generated at runtime by the single-cell signature module and are intentionally excluded from version control.",
+    "paths": {
+      "signature_txt": "single_cell_platelet_signature/Results_MergeSignature/Signature/platelet_associated_signature.txt",
+      "signature_csv": "single_cell_platelet_signature/Results_MergeSignature/Signature/platelet_associated_signature.csv",
+      "signature_rds": "single_cell_platelet_signature/Results_MergeSignature/Signature/platelet_associated_signature.rds",
+      "metadata_json": "single_cell_platelet_signature/Results_MergeSignature/Signature/platelet_associated_signature_metadata.json",
+      "overlap_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/BM_vs_Blood_gene_overlap.csv",
+      "shared_before_exclusion_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/shared_genes_before_exclusion.csv",
+      "excluded_genes_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/excluded_broadly_expressed_genes.csv",
+      "derivation_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/platelet_associated_signature_derivation_table.csv",
+      "supplementary_signature_table": "single_cell_platelet_signature/Results_MergeSignature/Tables/Supplementary_Table_X_platelet_associated_transcriptional_signature.csv"
+    }
+  }
+}
